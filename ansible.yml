@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install required dependencies
+      apt:
+        name: curl
+        state: present
+        update_cache: yes
+
+    - name: Download k3s installation script
+      get_url:
+        url: https://get.k3s.io
+        dest: /tmp/k3s_install.sh
+        mode: '0755'
+
+    - name: Install k3s latest stable
+      command: sh /tmp/k3s_install.sh
+
+    - name: Wait for k3s service
+      systemd:
+        name: k3s
+        state: started
+        enabled: yes
+
+    - name: Copy kubeconfig to user's home
+      copy:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: /home/{{ ansible_user }}/.kube/config
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0644'
+
