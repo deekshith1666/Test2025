@@ -20,8 +20,11 @@ jobs:
     - name: Create kubeconfig file
       run: |
         mkdir -p ~/.kube
-        echo "${{ secrets.KUBECONFIG_DATA }}" > ~/.kube/config
+        printf "%s" "${{ secrets.KUBECONFIG_DATA }}" > ~/.kube/config
+        chmod 600 ~/.kube/config
 
     - name: Apply Kubernetes manifests
+      env:
+        KUBECONFIG: ~/.kube/config
       run: |
         kubectl apply -f deployment.yml
