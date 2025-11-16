@@ -24,10 +24,11 @@
         enabled: yes
 
     - name: Copy kubeconfig to user's home
+      become: yes
       copy:
         src: /etc/rancher/k3s/k3s.yaml
-        dest: /home/{{ ansible_user }}/.kube/config
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        dest: /home/ubuntu/.kube/config
+        owner: ubuntu
+        group: ubuntu
         mode: '0644'
 
