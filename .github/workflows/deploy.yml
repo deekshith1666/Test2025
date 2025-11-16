@@ -20,9 +20,7 @@ jobs:
       - name: Create kubeconfig file
         run: |
           mkdir -p ~/.kube
-          cat << 'EOF' > ~/.kube/config
-${{ secrets.KUBECONFIG_DATA }}
-EOF
+          echo "${{ secrets.KUBECONFIG_DATA }}" > ~/.kube/config
           chmod 600 ~/.kube/config
 
       - name: Apply Kubernetes manifests
