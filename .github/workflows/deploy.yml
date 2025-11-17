@@ -37,8 +37,7 @@ jobs:
 
       - name: Verify deployment
         run: |
-          kubectl --kubeconfig ~/.kube/config get pods
-          kubectl --kubeconfig ~/.kube/config get services
+          kubectl --kubeconfig ~/.kube/config get all
       
       - name: Wait for NodePort availability
         run: |
