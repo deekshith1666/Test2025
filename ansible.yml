@@ -2,7 +2,7 @@
 - hosts: all
   become: yes
   vars:
-    # Automatically discover public IP of the EC2  instance
+    # Automatically discover public IP of the EC2 instance
     public_ip: "{{ lookup('url', 'https://checkip.amazonaws.com') | trim }}"
 
   tasks:
