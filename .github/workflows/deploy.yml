@@ -23,6 +23,10 @@ jobs:
           echo "${{ secrets.KUBECONFIG_DATA }}" > ~/.kube/config
           chmod 600 ~/.kube/config
 
+      - name: Test cluster connectivity
+        run: |
+          kubectl --kubeconfig ~/.kube/config get nodes
+
       - name: Apply Kubernetes manifests
         env:
           KUBECONFIG: ~/.kube/config
