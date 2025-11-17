@@ -1,7 +1,12 @@
 ---
 - hosts: all
   become: yes
+  vars:
+    # Automatically discover public IP of the EC2 instance
+    public_ip: "{{ lookup('url', 'https://checkip.amazonaws.com') | trim }}"
+
   tasks:
+
     - name: Install required dependencies
       apt:
         name: curl
@@ -14,21 +19,31 @@
         dest: /tmp/k3s_install.sh
         mode: '0755'
 
-    - name: Install k3s latest stable
+    - name: Install k3s latest stable with TLS SAN
+      environment:
+        INSTALL_K3S_EXEC: "--tls-san {{ public_ip }}"
       command: sh /tmp/k3s_install.sh
+      args:
+        creates: /etc/rancher/k3s/k3s.yaml
 
-    - name: Wait for k3s service
+    - name: Ensure k3s service is running
       systemd:
         name: k3s
         state: started
         enabled: yes
 
+    - name: Create kube directory for ubuntu user
+      file:
+        path: /home/ubuntu/.kube
+        state: directory
+        mode: '0755'
+        owner: ubuntu
+        group: ubuntu
+
     - name: Copy kubeconfig to user's home
-      become: yes
       copy:
         src: /etc/rancher/k3s/k3s.yaml
         dest: /home/ubuntu/.kube/config
         owner: ubuntu
         group: ubuntu
         mode: '0644'
-
