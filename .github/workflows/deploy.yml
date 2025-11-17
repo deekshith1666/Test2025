@@ -24,7 +24,7 @@ jobs:
       - name: Run Ansible playbook to set up k3s
         run: |
           ls -la ~
-          w
+          cat /etc/os-release
           ansible-playbook -i "localhost," -c local ansible.yml
           cat /etc/rancher/k3s/k3s.yaml
 
