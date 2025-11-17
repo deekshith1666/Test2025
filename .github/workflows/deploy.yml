@@ -30,3 +30,25 @@ jobs:
       - name: Apply Kubernetes manifests
         run: |
           kubectl --kubeconfig ~/.kube/config apply -f deployment.yml
+
+      - name: Verify deployment
+        run: |
+          kubectl --kubeconfig ~/.kube/config get pods
+          kubectl --kubeconfig ~/.kube/config get services
+      
+      - name: Wait for NodePort availability
+        run: |
+          echo "Waiting for NodePort to be assigned..."
+          for i in {1..20}; do
+            NODE_PORT=$(kubectl --kubeconfig ~/.kube/config get svc hello-service -o jsonpath='{.spec.ports[0].nodePort}')
+            if [[ -n "$NODE_PORT" ]]; then
+              echo "NodePort available: $NODE_PORT"
+              echo "Application URL: http://$(curl -s ifconfig.me):$NODE_PORT"
+              exit 0
+            fi
+            echo "Still waiting..."
+            sleep 5
+          done
+          
+          echo "Timed out waiting for NodePort!"
+          exit 1
