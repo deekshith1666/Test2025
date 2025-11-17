@@ -47,7 +47,7 @@ jobs:
             NODE_PORT=$(kubectl --kubeconfig ~/.kube/config get svc hello-service -o jsonpath='{.spec.ports[0].nodePort}')
             if [[ -n "$NODE_PORT" ]]; then
               echo "NodePort available: $NODE_PORT"
-              echo "Application URL: http://$(curl -s ifconfig.me):$NODE_PORT"
+              echo "Application URL: http://3.238.251.9:$NODE_PORT"
               exit 0
             fi
             echo "Still waiting..."
