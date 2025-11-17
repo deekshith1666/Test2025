@@ -4,6 +4,10 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  ACTIONS_STEP_DEBUG: true
+  ACTIONS_RUNNER_DEBUG: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
