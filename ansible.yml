@@ -21,7 +21,7 @@
 
     - name: Install k3s latest stable with TLS SAN
       environment:
-        INSTALL_K3S_EXEC: "--tls-san {{ public_ip }}"
+        INSTALL_K3S_EXEC: "--tls-san {{ public_ip }} --node-external-ip {{ public_ip }}"
       command: sh /tmp/k3s_install.sh
       args:
         creates: /etc/rancher/k3s/k3s.yaml
